@@ -1,0 +1,360 @@
+{
+  "name": "shipcheck",
+  "displayName": "ShipCheck",
+  "description": "Local multi-language verification before you commit or ship — JS/TS, Python, Go, PHP/CMS, Java, Rust, Ruby, .NET, shell, and web assets. No cloud, no API keys.",
+  "version": "0.2.1",
+  "publisher": "shipcheck",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Linters",
+    "Testing",
+    "Other"
+  ],
+  "keywords": [
+    "verification",
+    "lint",
+    "typescript",
+    "python",
+    "go",
+    "php",
+    "java",
+    "rust",
+    "ruby",
+    "dotnet",
+    "cms",
+    "wordpress",
+    "laravel",
+    "security",
+    "pre-commit",
+    "local"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "shipcheck.checkMyChanges",
+        "title": "Check My Changes",
+        "category": "ShipCheck",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "shipcheck.scanWorkspace",
+        "title": "Scan Full Workspace",
+        "category": "ShipCheck",
+        "icon": "$(folder)"
+      },
+      {
+        "command": "shipcheck.cancelScan",
+        "title": "Cancel Scan",
+        "category": "ShipCheck",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "shipcheck.rerunChecks",
+        "title": "Rerun Checks",
+        "category": "ShipCheck",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "shipcheck.exportReport",
+        "title": "Export Markdown Report",
+        "category": "ShipCheck",
+        "icon": "$(export)"
+      },
+      {
+        "command": "shipcheck.openFinding",
+        "title": "Open Finding",
+        "category": "ShipCheck"
+      },
+      {
+        "command": "shipcheck.dismissFinding",
+        "title": "Dismiss Finding",
+        "category": "ShipCheck",
+        "icon": "$(close)"
+      },
+      {
+        "command": "shipcheck.clearDismissed",
+        "title": "Clear Dismissed Findings",
+        "category": "ShipCheck"
+      },
+      {
+        "command": "shipcheck.openSettings",
+        "title": "Open Settings",
+        "category": "ShipCheck",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "shipcheck.refreshFiles",
+        "title": "Refresh Changed Files",
+        "category": "ShipCheck",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "shipcheck.showPanel",
+        "title": "Open Results",
+        "category": "ShipCheck",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "shipcheck.gettingStarted",
+        "title": "Getting Started",
+        "category": "ShipCheck",
+        "icon": "$(question)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "shipcheck",
+          "title": "ShipCheck",
+          "icon": "media/activity-bar.svg"
+        }
+      ]
+    },
+    "views": {
+      "shipcheck": [
+        {
+          "type": "webview",
+          "id": "shipcheck.sidebar",
+          "name": "Start here",
+          "icon": "media/activity-bar.svg",
+          "visibility": "visible"
+        },
+        {
+          "id": "shipcheck.changedFiles",
+          "name": "Changed Files",
+          "icon": "$(diff)"
+        },
+        {
+          "id": "shipcheck.results",
+          "name": "Results",
+          "icon": "$(checklist)"
+        },
+        {
+          "id": "shipcheck.security",
+          "name": "Security & Review",
+          "icon": "$(warning)"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "shipcheck.changedFiles",
+        "contents": "Edit and save a JS/TS file first, then check again.\n[Check My Changes](command:shipcheck.checkMyChanges)\n[How to use ShipCheck](command:shipcheck.gettingStarted)"
+      },
+      {
+        "view": "shipcheck.results",
+        "contents": "No results yet.\n[Check My Changes](command:shipcheck.checkMyChanges)\n[Open ShipCheck Panel](command:shipcheck.showPanel)"
+      },
+      {
+        "view": "shipcheck.security",
+        "contents": "Security findings appear here after a scan.\n[Check My Changes](command:shipcheck.checkMyChanges)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "shipcheck.checkMyChanges",
+          "when": "view == shipcheck.sidebar || view == shipcheck.changedFiles || view == shipcheck.results || view == shipcheck.security",
+          "group": "navigation@1"
+        },
+        {
+          "command": "shipcheck.rerunChecks",
+          "when": "view == shipcheck.results || view == shipcheck.security",
+          "group": "navigation@2"
+        },
+        {
+          "command": "shipcheck.cancelScan",
+          "when": "view == shipcheck.sidebar || view == shipcheck.results",
+          "group": "navigation@3"
+        },
+        {
+          "command": "shipcheck.refreshFiles",
+          "when": "view == shipcheck.changedFiles",
+          "group": "navigation@2"
+        },
+        {
+          "command": "shipcheck.exportReport",
+          "when": "view == shipcheck.results || view == shipcheck.security",
+          "group": "navigation@4"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "shipcheck.openFinding",
+          "when": "view == shipcheck.results || view == shipcheck.security",
+          "group": "inline@1"
+        },
+        {
+          "command": "shipcheck.dismissFinding",
+          "when": "viewItem == shipcheck.finding",
+          "group": "inline@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "shipcheck.openFinding",
+          "when": "false"
+        },
+        {
+          "command": "shipcheck.dismissFinding",
+          "when": "false"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "shipcheck.checkMyChanges",
+          "group": "navigation",
+          "when": "resourceExtname =~ /\\.(js|jsx|ts|tsx|mjs|cjs)$/"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ShipCheck",
+      "properties": {
+        "shipcheck.productName": {
+          "type": "string",
+          "default": "ShipCheck",
+          "description": "Display name used in UI, reports, and notifications. Change this to rebrand the extension."
+        },
+        "shipcheck.confirmScriptExecution": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ask for confirmation before running project scripts (tests, npm scripts)."
+        },
+        "shipcheck.runTests": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include Jest/Vitest when available."
+        },
+        "shipcheck.runSecurityScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run local secret/credential pattern scan."
+        },
+        "shipcheck.runRiskReview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Highlight review-risk areas (auth, payments, DB, etc.) as suggestions."
+        },
+        "shipcheck.includeUntracked": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include untracked (newly created) files in change detection."
+        },
+        "shipcheck.maxFileSizeKb": {
+          "type": "number",
+          "default": 512,
+          "description": "Skip files larger than this size (KB) during security and risk scans."
+        },
+        "shipcheck.excludeGlobs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/out/**",
+            "**/build/**",
+            "**/.git/**",
+            "**/coverage/**",
+            "**/*.min.js",
+            "**/*.map",
+            "**/reports/**"
+          ],
+          "description": "Glob patterns to exclude from scans."
+        },
+        "shipcheck.skipTestFixturesInSecurityScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Skip unit/integration test files during the secret scan (avoids false FAILED from sample keys in tests)."
+        },
+        "shipcheck.showWelcomeOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a short getting-started tip when ShipCheck activates."
+        },
+        "shipcheck.dismissedFindings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Dismissed finding IDs (managed by the extension)."
+        }
+      }
+    },
+    "colors": [
+      {
+        "id": "shipcheck.passed",
+        "description": "Color for PASSED status",
+        "defaults": {
+          "dark": "#3fb950",
+          "light": "#1a7f37",
+          "highContrast": "#3fb950"
+        }
+      },
+      {
+        "id": "shipcheck.failed",
+        "description": "Color for FAILED status",
+        "defaults": {
+          "dark": "#f85149",
+          "light": "#cf222e",
+          "highContrast": "#f85149"
+        }
+      },
+      {
+        "id": "shipcheck.reviewRequired",
+        "description": "Color for REVIEW REQUIRED status",
+        "defaults": {
+          "dark": "#d29922",
+          "light": "#9a6700",
+          "highContrast": "#d29922"
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext .ts",
+    "test": "npm run compile && node --test out/test/unit/secrets.test.js out/test/unit/minimatch.test.js out/test/unit/types.test.js out/test/unit/markdownExport.test.js out/test/unit/securityScan.test.js out/test/unit/riskReview.test.js out/test/unit/languages.test.js out/test/unit/registry.test.js",
+    "test:unit": "npm test",
+    "test:integration": "npm run compile && node scripts/lib/integration-harness.mjs",
+    "test:universal": "npm run compile && node scripts/lib/universal-compat-harness.mjs",
+    "package": "npx @vscode/vsce package --no-dependencies",
+    "check": "npm run compile && npm run lint && npm test",
+    "verify:release": "node scripts/verify-release.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vscode/vsce": "^3.9.2",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
+  },
+  "overrides": {
+    "@azure/identity": "4.14.1",
+    "@azure/msal-node": "7.1.2"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kalpeshrajora001/shipcheck"
+  },
+  "bugs": {
+    "url": "https://github.com/kalpeshrajora001/shipcheck/issues"
+  },
+  "homepage": "https://github.com/kalpeshrajora001/shipcheck#readme"
+}

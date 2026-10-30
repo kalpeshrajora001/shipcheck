@@ -1,0 +1,15 @@
+node_modules/
+out/
+dist/
+*.vsix
+.vscode-test/
+*.log
+.DS_Store
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+reports/*
+!reports/SHIPCHECK_RELEASE_AUDIT.md
+!reports/SHIPCHECK_UNIVERSAL_COMPATIBILITY_AUDIT.md

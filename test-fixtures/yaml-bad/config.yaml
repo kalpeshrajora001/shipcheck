@@ -1,0 +1,4 @@
+services:
+  app:
+  		bad_tabs: true
+    name: "unbalanced
